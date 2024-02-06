@@ -20,5 +20,5 @@ spec:
     labels:
       - key: pod-security.kubernetes.io/warn
         allowedRegex: restricted
-      - key: pod-security.kubernetes.io/warn-version:
+      - key: pod-security.kubernetes.io/warn-version
         allowedRegex: v1.27
