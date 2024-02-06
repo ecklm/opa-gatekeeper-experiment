@@ -7,7 +7,7 @@ spec:
   enforcementAction: deny
   match:
     excludedNamespaces:
-      - kube-system
+      - 'kube-*'
       - argocd
       - gatekeeper-system
     kinds:
@@ -16,7 +16,7 @@ spec:
         kinds:
           - Namespace
   parameters:
-    message: "All namespaces must have an `owner` label that points to your company username"
+    message: "All namespaces must have an Pod Security Admission labels set: ['pod-security.kubernetes.io/warn: restricted', 'pod-security.kubernetes.io/warn-version: v1.27']"
     labels:
       - key: pod-security.kubernetes.io/warn
         allowedRegex: restricted
