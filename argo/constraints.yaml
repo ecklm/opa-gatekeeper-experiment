@@ -1,68 +1,68 @@
+---
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sRequiredLabels
+metadata:
+  name: require-pod-security-admission
+spec:
+  enforcementAction: warn  # deny
+  match:
+    excludedNamespaces:
+      - 'kube-*'
+      - argocd
+      - gatekeeper-system
+    kinds:
+      - apiGroups:
+         - ""
+        kinds:
+          - Namespace
+  parameters:
+    message: "All namespaces must have an Pod Security Admission labels set: ['pod-security.kubernetes.io/warn: restricted', 'pod-security.kubernetes.io/warn-version: v1.27']"
+    labels:
+      - key: pod-security.kubernetes.io/enforce
+        allowedRegex: restricted
+      - key: pod-security.kubernetes.io/enforce-version
+        allowedRegex: v1.27
+
 # ---
-# apiVersion: constraints.gatekeeper.sh/v1beta1
-# kind: K8sRequiredLabels
+# apiVersion: mutations.gatekeeper.sh/v1
+# kind: AssignMetadata
 # metadata:
-#   name: require-pod-security-admission
+#   name: force-pod-security-admission
 # spec:
-#   enforcementAction: deny
 #   match:
 #     excludedNamespaces:
 #       - 'kube-*'
-#       - argocd
-#       - gatekeeper-system
+#       - '*argocd*'
+#       - '*gatekeeper-system*'
+#     scope: Cluster
 #     kinds:
 #       - apiGroups:
 #          - ""
 #         kinds:
 #           - Namespace
+#   location: "metadata.labels.'pod-security.kubernetes.io/warn'"
 #   parameters:
-#     message: "All namespaces must have an Pod Security Admission labels set: ['pod-security.kubernetes.io/warn: restricted', 'pod-security.kubernetes.io/warn-version: v1.27']"
-#     labels:
-#       - key: pod-security.kubernetes.io/warn
-#         allowedRegex: restricted
-#       - key: pod-security.kubernetes.io/warn-version
-#         allowedRegex: v1.27
-
----
-apiVersion: mutations.gatekeeper.sh/v1
-kind: AssignMetadata
-metadata:
-  name: force-pod-security-admission
-spec:
-  match:
-    excludedNamespaces:
-      - 'kube-*'
-      - '*argocd*'
-      - '*gatekeeper-system*'
-    scope: Cluster
-    kinds:
-      - apiGroups:
-         - ""
-        kinds:
-          - Namespace
-  location: "metadata.labels.'pod-security.kubernetes.io/warn'"
-  parameters:
-    assign:
-      value: restricted
-
----
-apiVersion: mutations.gatekeeper.sh/v1
-kind: AssignMetadata
-metadata:
-  name: force-pod-security-admission-version
-spec:
-  match:
-    excludedNamespaces:
-      - 'kube-*'
-      - '*argocd*'
-      - '*gatekeeper-system*'
-    scope: Cluster
-    kinds:
-      - apiGroups:
-         - ""
-        kinds:
-          - Namespace
-  location: "metadata.labels.'pod-security.kubernetes.io/warn-version'"
-  parameters:
-    assign:
-      value: v1.27
+#     assign:
+#       value: restricted
+# 
+# ---
+# apiVersion: mutations.gatekeeper.sh/v1
+# kind: AssignMetadata
+# metadata:
+#   name: force-pod-security-admission-version
+# spec:
+#   match:
+#     excludedNamespaces:
+#       - 'kube-*'
+#       - '*argocd*'
+#       - '*gatekeeper-system*'
+#     scope: Cluster
+#     kinds:
+#       - apiGroups:
+#          - ""
+#         kinds:
+#           - Namespace
+#   location: "metadata.labels.'pod-security.kubernetes.io/warn-version'"
+#   parameters:
+#     assign:
+#       value: v1.27
