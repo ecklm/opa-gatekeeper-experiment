@@ -2,11 +2,12 @@
 apiVersion: constraints.gatekeeper.sh/v1beta1
 kind: K8sRequiredLabels
 metadata:
-  name: require-pod-security-admission
+  name: audit-pod-security-admission
 spec:
   enforcementAction: warn  # deny
   match:
     excludedNamespaces:
+      # system exclusion
       - 'kube-*'
       - '*argocd*'
       - '*gatekeeper-system*'
@@ -25,14 +26,16 @@ spec:
 
 ---
 apiVersion: constraints.gatekeeper.sh/v1beta1
-kind: K8sContainerLimits
+kind: K8sRequiredLabels
 metadata:
-  name: container-must-have-limits
+  name: require-pod-security-admission
 spec:
-  enforcementAction: warn  # deny
+  enforcementAction: deny
   match:
-    scope: Cluster
     excludedNamespaces:
+      # temporal exclusion until implemented
+      - "security-admission"
+      # system exclusion
       - 'kube-*'
       - '*argocd*'
       - '*gatekeeper-system*'
@@ -41,24 +44,11 @@ spec:
          - ""
         kinds:
           - Namespace
-  parameters: {}
+  parameters:
+    message: "All namespaces must have an Pod Security Admission labels set: ['pod-security.kubernetes.io/enforce: restricted', 'pod-security.kubernetes.io/enforce-version: v1.27']"
+    labels:
+      - key: pod-security.kubernetes.io/enforce
+        allowedRegex: restricted
+      - key: pod-security.kubernetes.io/enforce-version
+        allowedRegex: v1.27
 
----
-apiVersion: constraints.gatekeeper.sh/v1beta1
-kind: K8sContainerRequests
-metadata:
-  name: container-must-have-requests
-spec:
-  enforcementAction: warn  # deny
-  match:
-    scope: Cluster
-    excludedNamespaces:
-      - 'kube-*'
-      - '*argocd*'
-      - '*gatekeeper-system*'
-    kinds:
-      - apiGroups:
-         - ""
-        kinds:
-          - Namespace
-  parameters: {}

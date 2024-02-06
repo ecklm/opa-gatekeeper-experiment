@@ -1,0 +1,43 @@
+---
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sContainerLimits
+metadata:
+  name: audit-container-limits
+spec:
+  enforcementAction: warn
+  match:
+    scope: Cluster
+    excludedNamespaces:
+      # system exclusion
+      - 'kube-*'
+      - '*argocd*'
+      - '*gatekeeper-system*'
+    kinds:
+      - apiGroups:
+         - ""
+        kinds:
+          - Pod
+  parameters: {}
+
+---
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sContainerLimits
+metadata:
+  name: require-container-limits
+spec:
+  enforcementAction: deny
+  match:
+    scope: Cluster
+    excludedNamespaces:
+      # temporal exclusion until implemented
+      - "security-admission"
+      # system exclusion
+      - 'kube-*'
+      - '*argocd*'
+      - '*gatekeeper-system*'
+    kinds:
+      - apiGroups:
+         - ""
+        kinds:
+          - Pod
+  parameters: {}
