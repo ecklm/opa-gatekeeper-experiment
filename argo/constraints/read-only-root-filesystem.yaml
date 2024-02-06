@@ -1,0 +1,41 @@
+---
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sPSPReadOnlyRootFilesystem
+metadata:
+  name: audit-read-only-root-filesystem
+spec:
+  enforcementAction: warn
+  match:
+    scope: Namespace
+    excludedNamespaces:
+      # system exclusion
+      - 'kube-*'
+      - '*argocd*'
+      - '*gatekeeper-system*'
+    kinds:
+      - apiGroups:
+         - ""
+        kinds:
+          - Pod
+
+---
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sPSPReadOnlyRootFilesystem
+metadata:
+  name: require-read-only-root-filesystem
+spec:
+  enforcementAction: deny
+  match:
+    scope: Namespace
+    excludedNamespaces:
+      # temporal exclusion until implemented
+      - "security-admission"
+      # system exclusion
+      - 'kube-*'
+      - '*argocd*'
+      - '*gatekeeper-system*'
+    kinds:
+      - apiGroups:
+         - ""
+        kinds:
+          - Pod
