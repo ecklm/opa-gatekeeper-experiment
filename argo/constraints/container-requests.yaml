@@ -6,7 +6,7 @@ metadata:
 spec:
   enforcementAction: warn
   match:
-    scope: Cluster
+    scope: Namespace
     excludedNamespaces:
       # system exclusion
       - 'kube-*'
@@ -27,7 +27,7 @@ metadata:
 spec:
   enforcementAction: deny
   match:
-    scope: Cluster
+    scope: Namespace
     excludedNamespaces:
       # temporal exclusion until implemented
       - "security-admission"
