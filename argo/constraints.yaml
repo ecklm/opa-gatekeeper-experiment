@@ -2,7 +2,7 @@
 apiVersion: constraints.gatekeeper.sh/v1beta1
 kind: K8sPSPPrivilegedContainer
 metadata:
-  name: no-privilege
+  name: no-privileged-container
 spec:
   enforcementAction: deny
   match:
@@ -13,12 +13,6 @@ spec:
           - ""
         kinds:
           - Pod
-      - apiGroups:
-          - apps
-        kinds:
-          - Deployment
-          - StatefulSet
-          - ReplicaSet
 
 ---
 apiVersion: constraints.gatekeeper.sh/v1beta1
@@ -26,15 +20,31 @@ kind: K8sPSPAllowPrivilegeEscalationContainer
 metadata:
   name: no-privilege-escalation-container
 spec:
+  enforcementAction: deny
   match:
     kinds:
       - apiGroups:
           - ""
         kinds:
           - Pod
+
+---
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sRequiredLabels
+metadata:
+  name: require-pod-security-admission
+spec:
+  enforcementAction: deny
+  match:
+    kinds:
       - apiGroups:
-          - apps
+         - ""
         kinds:
-          - Deployment
-          - StatefulSet
-          - ReplicaSet
+          - Namespace
+  parameters:
+    message: "All namespaces must have an `owner` label that points to your company username"
+    labels:
+      - key: pod-security.kubernetes.io/warn
+        allowedRegex: restricted
+      - key: pod-security.kubernetes.io/warn-version:
+        allowedRegex: v1.27

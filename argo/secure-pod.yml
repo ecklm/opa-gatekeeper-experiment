@@ -5,7 +5,7 @@ metadata:
   name: security-admission
 #   labels:
 #     pod-security.kubernetes.io/enforce: restricted
-#     pod-security.kubernetes.io/enforce-version: v1.29
+#     pod-security.kubernetes.io/enforce-version: v1.27
 
 ---
 apiVersion: apps/v1
