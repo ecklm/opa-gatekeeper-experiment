@@ -1,41 +1,15 @@
 ---
 apiVersion: constraints.gatekeeper.sh/v1beta1
-kind: K8sPSPPrivilegedContainer
-metadata:
-  name: no-privileged-container
-spec:
-  enforcementAction: deny
-  match:
-    excludedNamespaces:
-      - kube-system
-    kinds:
-      - apiGroups:
-          - ""
-        kinds:
-          - Pod
-
----
-apiVersion: constraints.gatekeeper.sh/v1beta1
-kind: K8sPSPAllowPrivilegeEscalationContainer
-metadata:
-  name: no-privilege-escalation-container
-spec:
-  enforcementAction: deny
-  match:
-    kinds:
-      - apiGroups:
-          - ""
-        kinds:
-          - Pod
-
----
-apiVersion: constraints.gatekeeper.sh/v1beta1
 kind: K8sRequiredLabels
 metadata:
   name: require-pod-security-admission
 spec:
   enforcementAction: deny
   match:
+    excludedNamespaces:
+      - kube-system
+      - argocd
+      - gatekeeper-system
     kinds:
       - apiGroups:
          - ""
