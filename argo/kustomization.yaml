@@ -5,3 +5,4 @@ resources:
   - ./constraints/require-pod-security-admission.yaml
   - ./constraints/container-limits.yaml
   - ./constraints/container-requests.yaml
+  - ./constraints/require-pod-security-admission.yaml
