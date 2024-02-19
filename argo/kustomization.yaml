@@ -6,3 +6,4 @@ resources:
   - ./constraints/container-limits.yaml
   - ./constraints/container-requests.yaml
   - ./constraints/read-only-root-filesystem.yaml
+  - ./secret.yaml
